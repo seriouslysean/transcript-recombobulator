@@ -1,0 +1,15 @@
+{
+  "name": "transcript-recombobulator",
+  "version": "0.1.0",
+  "description": "A tool to combine and reformat transcripts from Whisper",
+  "main": "combine.js",
+  "scripts": {
+    "tool:combine": "node ./combine.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sean Kennedy <sean@codeserious.com>",
+  "license": "MIT",
+  "dependencies": {
+    "yargs": "^17.7.2"
+  }
+}

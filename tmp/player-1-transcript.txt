@@ -1,0 +1,6 @@
+[00:00:00.000 --> 00:00:07.000]   I draw my sword and prepare for battle.
+[00:00:07.000 --> 00:00:23.080]   I wasn't expecting an ambush here.
+[00:00:23.080 --> 00:00:30.080]   I cast a protective spell.
+[00:00:30.080 --> 00:00:37.080]   Stay behind me, I'll protect you.
+[00:00:37.080 --> 00:01:07.040]   We need to find a way out of this forest.
+[00:01:07.040 --> 00:01:09.040]   Let's move quickly.

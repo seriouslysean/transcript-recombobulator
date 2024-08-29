@@ -1,0 +1,7 @@
+node_modules
+tmp/*
+!tmp/dm-transcript.txt
+!tmp/player-1-transcript.txt
+!tmp/player-2-transcript.txt
+!tmp/player-3-transcript.txt
+!tmp/combined-transcripts.txt

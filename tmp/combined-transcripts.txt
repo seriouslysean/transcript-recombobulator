@@ -1,0 +1,30 @@
+Summary:
+DM - Dungeon Master - DM - DM for the campaign
+Player 1 - Player - Player 1 - Fighter
+Player 2 - Player - Player 2 - Ranger
+Player 3 - Player - Player 3 - Wizard
+
+Transcripts:
+DM: [00:00:00.000 --> 00:00:02.760]   The forest is dense and dark, with shadows lurking everywhere.
+Player 3: [00:00:00.000 --> 00:00:04.000]   I cast a light spell to illuminate the area.
+Player 1: [00:00:00.000 --> 00:00:07.000]   I draw my sword and prepare for battle.
+Player 2: [00:00:00.000 --> 00:00:08.980]   I ready my bow and take aim at the figure.
+DM: [00:00:02.760 --> 00:00:04.080]   You hear a distant howl.
+Player 3: [00:00:04.000 --> 00:00:31.000]   The light reveals a hidden path.
+DM: [00:00:04.080 --> 00:00:14.400]   Suddenly, a figure emerges from the mist.
+Player 1: [00:00:07.000 --> 00:00:23.080]   I wasn't expecting an ambush here.
+Player 2: [00:00:08.980 --> 00:00:09.980]   I hope my shot is true.
+Player 2: [00:00:09.980 --> 00:00:13.540]   I'll cover you from here.
+Player 2: [00:00:13.540 --> 00:00:21.540]   This place gives me the creeps.
+DM: [00:00:14.400 --> 00:00:18.500]   Roll for initiative.
+Player 2: [00:00:21.540 --> 00:00:25.540]   Did you hear that? Something's moving in the bushes.
+Player 1: [00:00:23.080 --> 00:00:30.080]   I cast a protective spell.
+Player 1: [00:00:30.080 --> 00:00:37.080]   Stay behind me, I'll protect you.
+Player 3: [00:00:31.000 --> 00:00:36.000]   We should follow this path, it might lead us to safety.
+Player 3: [00:00:36.000 --> 00:00:55.000]   Be careful, it could be a trap.
+Player 1: [00:00:37.080 --> 00:01:07.040]   We need to find a way out of this forest.
+Player 3: [00:00:55.000 --> 00:00:57.000]   I sense magic in the air.
+Player 3: [00:00:57.000 --> 00:00:59.000]   Stay alert, everyone.
+Player 3: [00:00:59.000 --> 00:01:08.000]   I hear footsteps approaching.
+Player 1: [00:01:07.040 --> 00:01:09.040]   Let's move quickly.
+Player 3: [00:01:08.000 --> 00:01:10.000]   Prepare yourselves!

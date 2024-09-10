@@ -92,13 +92,14 @@ const parseVTT = (fileContent, dedupe, skipFilters, filename) => {
 };
 
 /**
- * Combines transcripts from multiple VTT files and saves to an output file.
+ * Combines transcripts from multiple VTT files and saves to output files.
  * Logs details of the combination process.
  * @param {Array} transcripts - Array of transcript details.
  * @param {string} outputFilePath - Path to the output file.
  * @param {boolean} timestamped - Whether to include timestamps in the output.
+ * @param {number} chunks - Number of parts to split the combined transcript into.
  */
-const combineTranscripts = (transcripts, outputFilePath, timestamped) => {
+const combineTranscripts = (transcripts, outputFilePath, timestamped, chunks) => {
   const combinedLines = [];
   let summary = 'Summary:\n';
 
@@ -116,17 +117,26 @@ const combineTranscripts = (transcripts, outputFilePath, timestamped) => {
   // Sort the lines based on timestamp
   combinedLines.sort((a, b) => a.timestamp.localeCompare(b.timestamp));
 
-  // Combine sorted lines into a single string
-  const combinedText = combinedLines.reduce((acc, { timestamp, character, content }) => {
-    if (timestamped) {
-      return `${acc}[${timestamp}] ${character}: ${content}\n`;
-    } else {
-      return `${acc}${character}: ${content}\n`;
-    }
-  }, `${summary}\nTranscripts:\n`);
+  // Calculate chunk size
+  const chunkLength = Math.ceil(combinedLines.length / chunks);
 
-  fs.writeFileSync(outputFilePath, combinedText, 'utf8');
-  console.log(`Transcripts combined and saved to ${outputFilePath}`);
+  for (let i = 0; i < chunks; i++) {
+    const chunk = combinedLines.slice(i * chunkLength, (i + 1) * chunkLength);
+
+    // Combine sorted lines into a single string
+    const combinedText = chunk.reduce((acc, { timestamp, character, content }) => {
+      if (timestamped) {
+        return `${acc}[${timestamp}] ${character}: ${content}\n`;
+      } else {
+        return `${acc}${character}: ${content}\n`;
+      }
+    }, `${summary}\nTranscripts:\n`);
+
+    const outputFilePathChunk = outputFilePath.replace(/(\.[\w\d_-]+)$/i, `-${i + 1}$1`);
+    const fileHeader = i === 0 ? summary : `${summary}\nFILE ${i + 1} of ${chunks}\n`;
+    fs.writeFileSync(outputFilePathChunk, `${fileHeader}${combinedText}`, 'utf8');
+    console.log(`Transcripts combined and saved to ${outputFilePathChunk}`);
+  }
 };
 
 // Parse command-line arguments
@@ -160,6 +170,11 @@ const argv = yargs(hideBin(process.argv))
     description: 'Path to the output file',
     demandOption: true,
   })
+  .option('chunks', {
+    type: 'number',
+    description: 'Number of parts to split the combined transcript into',
+    default: 1,
+  })
   .array('player-name')
   .array('role')
   .array('character-name')
@@ -169,7 +184,7 @@ const argv = yargs(hideBin(process.argv))
   .argv;
 
 // Validate that all arrays have the same length
-const { 'player-name': playerNames, role, 'character-name': characterNames, 'character-description': characterDescriptions, transcript, dedupe, 'skip-filter': skipFilters, timestamped } = argv;
+const { 'player-name': playerNames, role, 'character-name': characterNames, 'character-description': characterDescriptions, transcript, dedupe, 'skip-filter': skipFilters, timestamped, chunks } = argv;
 
 if (![playerNames, role, characterNames, characterDescriptions, transcript].every(arr => arr.length === playerNames.length)) {
   console.error('Error: All input arrays (player-name, role, character-name, character-description, transcript) must have the same length.');
@@ -187,7 +202,7 @@ const transcripts = playerNames.map((_, index) => ({
 
 // Combine the transcripts and save to file
 try {
-  combineTranscripts(transcripts, argv.output, timestamped);
+  combineTranscripts(transcripts, argv.output, timestamped, chunks);
 } catch (error) {
   console.error(`Error combining transcripts: ${error.message}`);
 }

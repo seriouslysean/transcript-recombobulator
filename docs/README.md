@@ -49,6 +49,10 @@ Or as a single regex pattern:
 
 The `--timestamped` option is a boolean flag that controls whether timestamps are included in the output. When enabled (default), timestamps are included. When disabled, timestamps are omitted from the output.
 
+### `--chunks`
+
+The `--chunks` option specifies the number of parts to split the combined transcript into. When set to `1` (default), no splitting occurs. When set to a value greater than `1`, the combined transcript is divided into the specified number of parts, with each part saved as a separate file.
+
 ## Examples
 
 - [DM Transcript](../tmp/dm-transcript.vtt)

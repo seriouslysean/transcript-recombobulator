@@ -1,4 +1,4 @@
-# Transcript Combiner
+# Transcript Recombobulator
 
 This repository contains a Node.js script to combine multiple transcript files into a single file. The script sorts the transcript lines based on timestamps and prefixes each line with the character's name.
 
@@ -10,16 +10,45 @@ You can run the script using the following command:
 
 ```bash
 npm run tool:combine -- --output ./tmp/combined-transcripts.txt \
-    --player-name "DM" --role "Dungeon Master" --character-name "DM" --character-description "DM for the campaign" --transcript "./tmp/dm-transcript.txt" \
-    --player-name "Player 1" --role "Player" --character-name "Player 1" --character-description "Fighter" --transcript "./tmp/player-1-transcript.txt" \
-    --player-name "Player 2" --role "Player" --character-name "Player 2" --character-description "Ranger" --transcript "./tmp/player-2-transcript.txt" \
-    --player-name "Player 3" --role "Player" --character-name "Player 3" --character-description "Wizard" --transcript "./tmp/player-3-transcript.txt"
+    --dedupe \
+    --skip-filter "/\[AUDIO OUT\]|\[BLANK_AUDIO\]/" \
+    --timestamped false \
+    --player-name "DM" --role "Dungeon Master" --character-name "DM" --character-description "DM for the campaign" --transcript "./tmp/dm-transcript.vtt" \
+    --player-name "Player 1" --role "Player" --character-name "Player 1" --character-description "Fighter" --transcript "./tmp/player-1-transcript.vtt" \
+    --player-name "Player 2" --role "Player" --character-name "Player 2" --character-description "Ranger" --transcript "./tmp/player-2-transcript.vtt" \
+    --player-name "Player 3" --role "Player" --character-name "Player 3" --character-description "Wizard" --transcript "./tmp/player-3-transcript.vtt"
 ```
+
+## Options
+
+### `--dedupe`
+
+The `--dedupe` option is a boolean flag that, when enabled, removes consecutive duplicate content from the parsed VTT files. This is useful for cleaning up transcripts where the same message might be repeated multiple times in a row.
+
+### `--skip-filter`
+
+The `--skip-filter` option allows you to specify a series of content strings or regex patterns to filter out messages from the parsed VTT files. If a message matches any of the specified filters, it will be excluded from the output. This is useful for removing unwanted content such as `[AUDIO OUT]` or `[BLANK_AUDIO]`.
+
+You can pass multiple filters as strings:
+
+```bash
+--skip-filter "[AUDIO OUT]" "[BLANK_AUDIO]"
+```
+
+Or as a single regex pattern:
+
+```bash
+--skip-filter "/\[AUDIO OUT\]|\[BLANK_AUDIO\]/"
+```
+
+### `--timestamped`
+
+The `--timestamped` option is a boolean flag that controls whether timestamps are included in the output. When enabled (default), timestamps are included. When disabled, timestamps are omitted from the output.
 
 ## Examples
 
-- [DM Transcript](../tmp/dm-transcript.txt)
-- [Player 1 Transcript](../tmp/player-1-transcript.txt)
-- [Player 2 Transcript](../tmp/player-2-transcript.txt)
-- [Player 3 Transcript](../tmp/player-3-transcript.txt)
+- [DM Transcript](../tmp/dm-transcript.vtt)
+- [Player 1 Transcript](../tmp/player-1-transcript.vtt)
+- [Player 2 Transcript](../tmp/player-2-transcript.vtt)
+- [Player 3 Transcript](../tmp/player-3-transcript.vtt)
 - [Combined Transcripts](../tmp/combined-transcripts.txt)

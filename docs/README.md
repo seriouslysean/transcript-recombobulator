@@ -10,7 +10,7 @@ You can run the script using the following command:
 
 ```bash
 npm run tool:combine -- --output ./tmp/combined-transcripts.txt \
-    --dedupe \
+    --dedupe "consecutive" \
     --skip-filter "/\[AUDIO OUT\]|\[BLANK_AUDIO\]/" \
     --timestamped false \
     --player-name "DM" --role "Dungeon Master" --character-name "DM" --character-description "DM for the campaign" --transcript "./tmp/dm-transcript.vtt" \
@@ -23,7 +23,11 @@ npm run tool:combine -- --output ./tmp/combined-transcripts.txt \
 
 ### `--dedupe`
 
-The `--dedupe` option is a boolean flag that, when enabled, removes consecutive duplicate content from the parsed VTT files. This is useful for cleaning up transcripts where the same message might be repeated multiple times in a row.
+The `--dedupe` option specifies the deduplication strategy to be used when processing VTT files. It accepts the following values:
+
+- `"false"`: No deduplication is performed. All content is included as-is.
+- `"consecutive"`: Removes consecutive duplicate content. This is useful for cleaning up transcripts where the same message might be repeated multiple times in a row.
+- `"unique"`: Ensures only the first occurrence of each unique message is included. This is useful for eliminating repeated content that may occur due to AI hallucinations.
 
 ### `--skip-filter`
 

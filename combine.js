@@ -34,7 +34,7 @@ const shouldSkipContent = (content, filters) => {
  * Parses VTT file content and returns an array of timestamped content.
  * Logs deduplication and filter information based on options.
  * @param {string} fileContent - The content of the VTT file.
- * @param {boolean} dedupe - Whether to remove consecutive duplicate content.
+ * @param {string} dedupe - The deduplication strategy ("false", "consecutive", "unique").
  * @param {Array} skipFilters - Array of strings or regex patterns to filter out content.
  * @param {string} filename - The name of the VTT file being parsed.
  * @returns {Array} Parsed VTT content as an array of arrays.
@@ -45,12 +45,13 @@ const parseVTT = (fileContent, dedupe, skipFilters, filename) => {
   const entries = fileContent.split(timeRegex).slice(1); // Split on timestamps and remove the first empty element
 
   let lastContent = null;
+  let uniqueContents = new Set();
   let skippedCount = 0;
   let duplicateCount = 0;
   let initialEntries = 0;
 
   console.log(`\nProcessing ${filename} with the following options:`);
-  if (dedupe) console.log(`    - Deduplication enabled`);
+  if (dedupe !== "false") console.log(`    - Deduplication strategy: ${dedupe}`);
   if (skipFilters.length > 0) console.log(`    - Skip filters applied: ${skipFilters}`);
 
   for (let i = 0; i < entries.length; i += 3) {
@@ -66,8 +67,11 @@ const parseVTT = (fileContent, dedupe, skipFilters, filename) => {
       continue;
     }
 
-    // Compare current content with the last content for deduplication
-    if (dedupe && lastContent !== null && content === lastContent) {
+    // Deduplication logic
+    if (dedupe === "consecutive" && lastContent !== null && content === lastContent) {
+      duplicateCount++;
+      continue;
+    } else if (dedupe === "unique" && uniqueContents.has(content)) {
       duplicateCount++;
       continue;
     }
@@ -75,11 +79,12 @@ const parseVTT = (fileContent, dedupe, skipFilters, filename) => {
     if (content) {
       result.push([`${startTime} --> ${endTime}`, content]);
       lastContent = content;
+      uniqueContents.add(content);
     }
   }
 
   console.log(`    - ${initialEntries} entries processed`);
-  if (dedupe) console.log(`    - ${duplicateCount} duplicates removed`);
+  if (dedupe !== "false") console.log(`    - ${duplicateCount} duplicates removed`);
   if (skipFilters.length > 0) console.log(`    - ${skippedCount} skipped due to filters`);
   console.log(`    - ${result.length} final messages detected`);
 
@@ -127,9 +132,10 @@ const combineTranscripts = (transcripts, outputFilePath, timestamped) => {
 // Parse command-line arguments
 const argv = yargs(hideBin(process.argv))
   .option('dedupe', {
-    type: 'boolean',
-    description: 'Remove consecutive duplicate content',
-    default: false,
+    type: 'string',
+    description: 'Deduplication strategy ("false", "consecutive", "unique")',
+    default: 'false',
+    choices: ['false', 'consecutive', 'unique'],
   })
   .option('skip-filter', {
     type: 'array',

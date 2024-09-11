@@ -4,6 +4,11 @@ This repository contains a Node.js script to combine multiple transcript files i
 
 I built this to help make it easier when summarizing D&D campaign session audio. By putting all the players' transcripts together, it helps a large language model (LLM) understand the flow of events better and creates a more accurate summary.
 
+## Installation
+
+1. Clone this repository
+2. Install the dependencies using `npm ci`
+
 ## Usage
 
 You can run the script using the following command:
@@ -60,3 +65,51 @@ The `--chunks` option specifies the number of parts to split the combined transc
 - [Player 2 Transcript](../tmp/player-2-transcript.vtt)
 - [Player 3 Transcript](../tmp/player-3-transcript.vtt)
 - [Combined Transcripts](../tmp/combined-transcripts.txt)
+
+## Generating Transcripts
+
+To generate transcripts for D&D live-play sessions, I use a combination of things.
+
+### Tools and Resources
+
+- **[Craig](https://craig.chat/)**: A Discord bot used to record the sessions.
+- **[FFmpeg](https://ffmpeg.org/)**: A tool to convert audio files from ogg to wav format.
+  - Install via Homebrew: `brew install ffmpeg`
+- **[whisper.cpp](https://github.com/ggerganov/whisper.cpp)**: A tool for transcribing audio files.
+
+### Process Overview
+
+#### Recording Sessions
+
+Use Craig via Discord to record the sessions, then download them in the ogg format.
+
+#### Converting Audio Files
+
+Convert the ogg files to wav format using FFmpeg.
+
+```bash
+for f in *.ogg; do ffmpeg -i "$f" -ar 16000 -ac 1 "${f%.ogg}.wav"; done
+```
+
+#### Transcribing Audio
+
+Use whisper.cpp to transcribe the wav files into VTT format.
+
+```bash
+for f in *.wav; do ~/Projects/whisper.cpp/main \
+    -m ~/Projects/whisper.cpp/models/ggml-large-v3.bin \
+    -f "$f" \
+    --output-srt \
+    --print-colors \
+    --print-progress \
+    --output-file "${f%.wav}" \
+    --beam-size 5 \
+    --entropy-thold 2.8 \
+    --max-context 64 \
+    --prompt "This is a live-play Dungeons & Dragons 5e session."
+done
+```
+
+### Additional Resources
+
+- **[Automating D&D Notetaking with AI](https://medium.com/@brandonharris_12357/automating-d-d-notetaking-with-ai-89ecd36e8b0e)**: An article that inspired this process.

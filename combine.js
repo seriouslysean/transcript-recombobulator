@@ -119,6 +119,7 @@ const combineTranscripts = (transcripts, outputFilePath, timestamped, chunks) =>
 
   // Calculate chunk size
   const chunkLength = Math.ceil(combinedLines.length / chunks);
+  const outputFiles = [];
 
   for (let i = 0; i < chunks; i++) {
     const chunk = combinedLines.slice(i * chunkLength, (i + 1) * chunkLength);
@@ -130,12 +131,26 @@ const combineTranscripts = (transcripts, outputFilePath, timestamped, chunks) =>
       } else {
         return `${acc}${character}: ${content}\n`;
       }
-    }, `${summary}\nTranscripts:\n`);
+    }, '');
 
     const outputFilePathChunk = outputFilePath.replace(/(\.[\w\d_-]+)$/i, `-${i + 1}$1`);
-    const fileHeader = i === 0 ? summary : `${summary}\nFILE ${i + 1} of ${chunks}\n`;
+    let fileHeader = `${summary}\n`;
+
+    if (chunks > 1) {
+      fileHeader += `FILE ${i + 1} of ${chunks}\n\n`;
+    }
+
+    fileHeader += `TRANSCRIPT:\n`;
+
     fs.writeFileSync(outputFilePathChunk, `${fileHeader}${combinedText}`, 'utf8');
-    console.log(`Transcripts combined and saved to ${outputFilePathChunk}`);
+    outputFiles.push(outputFilePathChunk);
+  }
+
+  if (chunks > 1) {
+    console.log(`\nTranscripts combined, chunked into ${chunks} files and saved to:`);
+    outputFiles.forEach(file => console.log(`    - ${file}`));
+  } else {
+    console.log(`\nTranscripts combined and saved to ${outputFiles[0]}`);
   }
 };
 
